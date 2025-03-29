@@ -7,23 +7,23 @@ export async function GET(
 ) {
   try {
     const id = params.id;
-    
-    const { data, error } = await supabase
+
+    const { data, error: fetchError } = await supabase
       .from('inventory_items')
       .select('*')
       .eq('id', id)
       .single();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (fetchError) {
+      return NextResponse.json({ error: fetchError.message }, { status: 500 });
     }
-    
+
     if (!data) {
       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
     }
 
     return NextResponse.json(data);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({ error: 'Failed to fetch item' }, { status: 500 });
   }
 }
@@ -33,11 +33,10 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Fix for NextJS error - await params to ensure it's fully available
-    const { id } = await params;
+    const id = params.id;
     const body = await request.json();
 
-    const { data, error } = await supabase
+    const { data, error: updateError } = await supabase
       .from('inventory_items')
       .update({
         item_name: body.item_name,
@@ -52,8 +51,8 @@ export async function PUT(
       .eq('id', id)
       .select();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (updateError) {
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
 
     if (!data || data.length === 0) {
@@ -61,7 +60,7 @@ export async function PUT(
     }
 
     return NextResponse.json(data[0]);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({ error: 'Failed to update item' }, { status: 500 });
   }
 }
