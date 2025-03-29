@@ -3,7 +3,6 @@ import supabase from '@/lib/supabase';
 
 export async function GET() {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, error } = await supabase
       .from('inventory_items')
       .select('*')
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, error } = await supabase
       .from('inventory_items')
       .insert([{ 

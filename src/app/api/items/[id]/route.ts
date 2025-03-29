@@ -8,7 +8,6 @@ export async function GET(
   try {
     const id = params.id;
     
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, error } = await supabase
       .from('inventory_items')
       .select('*')
@@ -34,10 +33,10 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    // Fix for NextJS error - await params to ensure it's fully available
+    const { id } = await params;
     const body = await request.json();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, error } = await supabase
       .from('inventory_items')
       .update({
