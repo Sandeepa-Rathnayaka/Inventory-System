@@ -8,14 +8,14 @@ export async function GET(
   try {
     const id = params.id;
     
-    const { data, error } = await supabase
+    const { data, error: supabaseError } = await supabase
       .from('inventory_items')
       .select('*')
       .eq('id', id)
       .single();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (supabaseError) {
+      return NextResponse.json({ error: supabaseError.message }, { status: 500 });
     }
     
     if (!data) {
@@ -36,7 +36,7 @@ export async function PUT(
     const id = params.id;
     const body = await request.json();
 
-    const { data, error } = await supabase
+    const { data, error: supabaseError } = await supabase
       .from('inventory_items')
       .update({
         item_name: body.item_name,
@@ -51,8 +51,8 @@ export async function PUT(
       .eq('id', id)
       .select();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (supabaseError) {
+      return NextResponse.json({ error: supabaseError.message }, { status: 500 });
     }
 
     if (!data || data.length === 0) {
