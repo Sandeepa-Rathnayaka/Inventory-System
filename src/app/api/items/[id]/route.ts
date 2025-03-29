@@ -23,7 +23,7 @@ export async function GET(
     }
 
     return NextResponse.json(data);
-  } catch (_) {
+  } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch item' }, { status: 500 });
   }
 }
@@ -33,8 +33,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Fix for NextJS error - await params to ensure it's fully available
-    const { id } = await params;
+    const id = params.id;
     const body = await request.json();
 
     const { data, error } = await supabase
@@ -61,7 +60,7 @@ export async function PUT(
     }
 
     return NextResponse.json(data[0]);
-  } catch (_) {
-    return NextResponse.json({ error: 'Failed to fetch item' }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to update item' }, { status: 500 });
   }
 }
